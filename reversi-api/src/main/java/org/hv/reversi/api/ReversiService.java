@@ -17,10 +17,17 @@ public interface ReversiService extends Service {
      */
     ServiceCall<NotUsed, NotUsed, NotUsed> createGame();
     
+    /**
+     * Service call for getting a game.
+     * The ID of this service call is the game Id, and the response message is the Game object.
+     */
+    ServiceCall<String, NotUsed, Game> getGame();
+    
     @Override
     default Descriptor descriptor() {
-        return named("reversiService").with(
-            restCall(Method.POST, "/api/reversi", createGame())
+        return named("reversiGameService").with(
+            restCall(Method.POST, "/api/reversi/games/", createGame()),
+            restCall(Method.GET,  "/api/reversi/games/:id", getGame())
         ).withAutoAcl(true);
     }
 }
