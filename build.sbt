@@ -47,3 +47,6 @@ lazy val eclipseSettings = Seq(
 
 // Delete database files on start
 lagomCassandraCleanOnStart in ThisBuild := true
+
+
+fork in run := true
