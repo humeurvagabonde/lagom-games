@@ -1,10 +1,10 @@
-package org.hv.reversi.impl;
+package org.hv.reversi.game.impl;
 
 import java.util.Optional;
 
 import javax.annotation.concurrent.Immutable;
 
-import org.hv.reversi.api.Game;
+import org.hv.reversi.game.api.Game;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -14,12 +14,12 @@ import com.lightbend.lagom.serialization.Jsonable;
 @SuppressWarnings("serial")
 @Immutable
 @JsonDeserialize
-public class ReversiState implements Jsonable {
+public class ReversiGameState implements Jsonable {
 
     public final Optional<Game> game;
     
     @JsonCreator
-    public ReversiState(Optional<Game> game) {
+    public ReversiGameState(Optional<Game> game) {
       this.game = Preconditions.checkNotNull(game, "game");
     }
 }

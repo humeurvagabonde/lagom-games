@@ -6,7 +6,10 @@ scalaVersion in ThisBuild := "2.11.7"
 lazy val reversiApi = project("reversi-api")
   .settings(
     version := "1.0-SNAPSHOT",
-    libraryDependencies += lagomJavadslApi
+    libraryDependencies ++= Seq(
+	  lagomJavadslApi,
+	  lagomJavadslImmutables
+    )
   )
 
 lazy val reversiImpl = project("reversi-impl")
@@ -15,6 +18,7 @@ lazy val reversiImpl = project("reversi-impl")
     version := "1.0-SNAPSHOT",
     libraryDependencies ++= Seq(
       lagomJavadslPersistence,
+      lagomJavadslImmutables,
       lagomJavadslTestKit
     )
   )
@@ -46,7 +50,8 @@ lazy val eclipseSettings = Seq(
 )
 
 // Delete database files on start
+import scala.concurrent.duration._ // Mind that the import is needed.
 lagomCassandraCleanOnStart in ThisBuild := true
-
+lagomCassandraMaxBootWaitingTime in ThisBuild := 60.seconds
 
 fork in run := true

@@ -1,4 +1,4 @@
-package org.hv.reversi.api;
+package org.hv.reversi.game.api;
 
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
@@ -10,9 +10,12 @@ import com.google.common.base.MoreObjects;
 @JsonDeserialize
 public final class Game {
 
-    private String id;
+    private GameId id;
+    private GameConfiguration configuration;
+    private GameProgression progression;
+    private GameBoard board;
 
-    public Game(String gameId) {
+    public Game(GameId gameId) {
         this.id = gameId;
     }
 
@@ -36,7 +39,7 @@ public final class Game {
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper("Game").add("id", id).toString();
+        return MoreObjects.toStringHelper("Game").add("id", id.toString()).toString();
     }
 
 }

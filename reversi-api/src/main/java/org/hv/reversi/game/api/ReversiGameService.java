@@ -1,4 +1,4 @@
-package org.hv.reversi.api;
+package org.hv.reversi.game.api;
 
 import static com.lightbend.lagom.javadsl.api.Service.named;
 import static com.lightbend.lagom.javadsl.api.Service.restCall;
@@ -10,12 +10,12 @@ import com.lightbend.lagom.javadsl.api.transport.Method;
 
 import akka.NotUsed;
 
-public interface ReversiService extends Service {
+public interface ReversiGameService extends Service {
 
     /**
      * Service call for creating a game of Reversi.
      */
-    ServiceCall<NotUsed, NotUsed, NotUsed> createGame();
+    ServiceCall<NotUsed, NotUsed, GameId> createGame();
     
     /**
      * Service call for getting a game.
