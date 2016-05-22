@@ -9,6 +9,7 @@ import org.hv.reversi.game.api.GameId;
 import org.hv.reversi.game.api.ReversiGameService;
 import org.hv.reversi.game.impl.ReversiGameCommand.CreateGame;
 import org.hv.reversi.game.impl.ReversiGameCommand.GetGame;
+import org.hv.service.BaseGameService;
 
 import com.lightbend.lagom.javadsl.api.ServiceCall;
 import com.lightbend.lagom.javadsl.api.transport.NotFound;
@@ -17,7 +18,7 @@ import com.lightbend.lagom.javadsl.persistence.PersistentEntityRegistry;
 
 import akka.NotUsed;
 
-public class ReversiGameServiceImpl implements ReversiGameService {
+public class ReversiGameServiceImpl extends BaseGameService implements ReversiGameService {
 
     private final PersistentEntityRegistry persistentEntities;
     
@@ -29,10 +30,10 @@ public class ReversiGameServiceImpl implements ReversiGameService {
 
     @Override
     public ServiceCall<NotUsed, NotUsed, GameId> createGame() {
-        return (id, request) -> {
+        return authenticated(userId -> (id, request) -> {
         	GameId gameId = GameId.of(UUID.randomUUID().toString());
             return reversiEntityRef(gameId.toString()).ask(new CreateGame(gameId)).thenApply(reply -> reply.gameId);
-        };
+        });
     }
     
     @Override

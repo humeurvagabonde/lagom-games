@@ -3,6 +3,8 @@ package org.hv.reversi.game.api;
 import static com.lightbend.lagom.javadsl.api.Service.named;
 import static com.lightbend.lagom.javadsl.api.Service.restCall;
 
+import org.hv.auth.JwtServiceIdentificationStrategy;
+
 import com.lightbend.lagom.javadsl.api.Descriptor;
 import com.lightbend.lagom.javadsl.api.Service;
 import com.lightbend.lagom.javadsl.api.ServiceCall;
@@ -28,6 +30,8 @@ public interface ReversiGameService extends Service {
         return named("reversiGameService").with(
             restCall(Method.POST, "/api/reversi/games/", createGame()),
             restCall(Method.GET,  "/api/reversi/games/:id", getGame())
-        ).withAutoAcl(true);
+        )
+		.withAutoAcl(true)
+		.withServiceIdentificationStrategy(new JwtServiceIdentificationStrategy());
     }
 }
