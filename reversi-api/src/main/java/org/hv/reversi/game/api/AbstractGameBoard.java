@@ -1,21 +1,27 @@
 package org.hv.reversi.game.api;
 
-import org.hv.user.api.UserId;
 import org.immutables.value.Value;
 
 import com.lightbend.lagom.javadsl.immutable.ImmutableStyle;
 
 @Value.Immutable
 @ImmutableStyle
-public abstract class AbstractGameBoard {
+public interface AbstractGameBoard {
 
 	enum Color {
 		BLACK,
 		WHITE
 	}
 	
+	@Value.Immutable
+	@ImmutableStyle
+	interface Pos {
+		int x();
+		int y();
+	}
+	
 	@Value.Default
-	Color[][] board() {
+	default Color[][] board() {
 		return new Color[7][7];
 	}
 	
@@ -48,6 +54,48 @@ public abstract class AbstractGameBoard {
 		
 		return moveList;
 	}
+	/**
+	 * Check whether a move is valid
+	 * @param board the board
+	 * @param piece the piece need to check
+	 * @param row row of the move
+	 * @param col column of the move
+	 * @return true if the move is valid, false otherwise
+	public static boolean isValidMove(char[][] board, char piece, int row, int col) {
+		// check whether this square is empty
+		if (board[row][col] != sEMPTY_PIECE)
+			return false;
+		
+		char oppPiece = (piece == sBLACK_PIECE) ? sWHITE_PIECE : sBLACK_PIECE;
+		
+		boolean isValid = false;
+		// check 8 directions
+		for (int i = 0; i < 8; ++i) {
+			int curRow = row + sOFFSET_MOVE_ROW[i];
+			int curCol = col + sOFFSET_MOVE_COL[i];
+			boolean hasOppPieceBetween = false;
+			while (curRow >=0 && curRow < 8 && curCol >= 0 && curCol < 8) {
+				
+				if (board[curRow][curCol] == oppPiece)
+					hasOppPieceBetween = true;
+				else if ((board[curRow][curCol] == piece) && hasOppPieceBetween)
+				{
+					isValid = true;
+					break;
+				}
+				else
+					break;
+				
+				curRow += sOFFSET_MOVE_ROW[i];
+				curCol += sOFFSET_MOVE_COL[i];
+			}
+			if (isValid)
+				break;
+		}
+		
+		return isValid;
+	}
+	
 	 */
 	
 }
