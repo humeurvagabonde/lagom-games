@@ -7,8 +7,6 @@ import javax.inject.Inject;
 import org.hv.reversi.game.api.Game;
 import org.hv.reversi.game.api.GameId;
 import org.hv.reversi.game.api.ReversiGameService;
-import org.hv.reversi.game.impl.ReversiGameCommand.CreateGame;
-import org.hv.reversi.game.impl.ReversiGameCommand.GetGame;
 import org.hv.service.BaseGameService;
 
 import com.lightbend.lagom.javadsl.api.ServiceCall;
@@ -32,16 +30,16 @@ public class ReversiGameServiceImpl extends BaseGameService implements ReversiGa
     public ServiceCall<NotUsed, NotUsed, GameId> createGame() {
         return authenticated(userId -> (id, request) -> {
         	GameId gameId = GameId.of(UUID.randomUUID().toString());
-            return reversiEntityRef(gameId.toString()).ask(new CreateGame(gameId)).thenApply(reply -> reply.gameId);
+            return reversiEntityRef(gameId.toString()).ask(CreateGame.of(gameId)).thenApply(reply -> reply.gameId());
         });
     }
     
     @Override
     public ServiceCall<String, NotUsed, Game> getGame() {
       return (id, request) -> {
-        return reversiEntityRef(id).ask(new GetGame()).thenApply(reply -> {
-          if (reply.game.isPresent())
-            return reply.game.get();
+        return reversiEntityRef(id).ask(GetGame.of()).thenApply(reply -> {
+          if (reply.game().isPresent())
+            return reply.game().get();
           else
             throw new NotFound("reversi game " + id + " not found");
         });

@@ -2,6 +2,7 @@ package org.hv.reversi.game.api;
 
 import org.hv.user.api.UserId;
 import org.immutables.value.Value;
+import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
 import com.lightbend.lagom.javadsl.immutable.ImmutableStyle;
@@ -10,6 +11,9 @@ import com.lightbend.lagom.javadsl.immutable.ImmutableStyle;
 @ImmutableStyle
 public interface AbstractScoreTable {
 
-    PMap<UserId, Score> scoreTable();
-    
+	@Value.Default
+	default PMap<UserId, Score> scoreTable() {
+		return HashTreePMap.empty();
+	}
+
 }
