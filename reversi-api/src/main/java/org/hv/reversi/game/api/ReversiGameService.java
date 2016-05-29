@@ -2,6 +2,7 @@ package org.hv.reversi.game.api;
 
 import static com.lightbend.lagom.javadsl.api.Service.named;
 import static com.lightbend.lagom.javadsl.api.Service.restCall;
+import static com.lightbend.lagom.javadsl.api.Service.pathCall;
 
 import org.hv.auth.JwtServiceIdentificationStrategy;
 
@@ -11,6 +12,7 @@ import com.lightbend.lagom.javadsl.api.ServiceCall;
 import com.lightbend.lagom.javadsl.api.transport.Method;
 
 import akka.NotUsed;
+import akka.stream.javadsl.Source;
 
 public interface ReversiGameService extends Service {
 
@@ -25,11 +27,14 @@ public interface ReversiGameService extends Service {
      */
     ServiceCall<String, NotUsed, Game> getGame();
     
+    ServiceCall<String, Source<PlayDiscRequest, ?>, Source<Game, ?>> playDisc();
+    
     @Override
     default Descriptor descriptor() {
         return named("reversiGameService").with(
             restCall(Method.POST, "/api/reversi/games/", createGame()),
-            restCall(Method.GET,  "/api/reversi/games/:id", getGame())
+            restCall(Method.GET,  "/api/reversi/games/:id", getGame()),
+            pathCall("/api/reversi/games/:id/play-disc", playDisc())
         )
 		.withAutoAcl(true)
 		.withServiceIdentificationStrategy(new JwtServiceIdentificationStrategy());
