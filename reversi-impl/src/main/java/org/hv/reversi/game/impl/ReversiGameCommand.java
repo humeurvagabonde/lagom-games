@@ -100,7 +100,7 @@ public interface ReversiGameCommand extends Jsonable {
 	@Value.Immutable
 	@ImmutableStyle
 	@JsonDeserialize(as = PlayDisc.class)
-	interface AbstractPlayDisc extends ReversiGameCommand, PersistentEntity.ReplyType<Done> {
+	interface AbstractPlayDisc extends ReversiGameCommand, PersistentEntity.ReplyType<GetGameReply> {
 		@Value.Parameter
 		UserId userId();
 		

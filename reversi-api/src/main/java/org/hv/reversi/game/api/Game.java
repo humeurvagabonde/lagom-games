@@ -18,6 +18,10 @@ public final class Game {
     public Game(GameId gameId) {
         this.id = gameId;
     }
+    
+    public GameId id() {
+    	return id;
+    }
 
     @Override
     public boolean equals(@Nullable Object another) {

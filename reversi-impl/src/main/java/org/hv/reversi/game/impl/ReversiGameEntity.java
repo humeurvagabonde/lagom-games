@@ -25,6 +25,12 @@ public class ReversiGameEntity extends PersistentEntity<ReversiGameCommand, Reve
 
 		b.setEventHandler(GameCreated.class, evt -> ReversiGameState.of(Optional.of(new Game(evt.gameId))));
 
+		b.setCommandHandler(PlayDisc.class, (cmd, ctx) -> {
+			System.out.println("PLAY DISC!!!!");
+			ctx.reply(GetGameReply.of(state().game()));
+			return ctx.done();
+		});
+		
 		b.setReadOnlyCommandHandler(GetGame.class, (cmd, ctx) -> {
 			ctx.reply(GetGameReply.of(state().game()));
 		});
