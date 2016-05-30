@@ -6,7 +6,7 @@ import com.lightbend.lagom.javadsl.immutable.ImmutableStyle;
 
 @Value.Immutable
 @ImmutableStyle
-public interface AbstractScore {
+interface AbstractScore {
 
 	@Value.Parameter
     int score();

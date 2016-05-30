@@ -9,7 +9,7 @@ import com.lightbend.lagom.javadsl.immutable.ImmutableStyle;
 
 @Value.Immutable
 @ImmutableStyle
-public interface AbstractScoreTable {
+interface AbstractScoreTable {
 
 	@Value.Default
 	default PMap<UserId, Score> scoreTable() {

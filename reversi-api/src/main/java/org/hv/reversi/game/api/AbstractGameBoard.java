@@ -6,12 +6,7 @@ import com.lightbend.lagom.javadsl.immutable.ImmutableStyle;
 
 @Value.Immutable
 @ImmutableStyle
-public interface AbstractGameBoard {
-
-	enum Color {
-		BLACK,
-		WHITE
-	}
+interface AbstractGameBoard {
 	
 	@Value.Immutable
 	@ImmutableStyle
@@ -21,8 +16,8 @@ public interface AbstractGameBoard {
 	}
 	
 	@Value.Default
-	default Color[][] board() {
-		return new Color[7][7];
+	default GameConfiguration.Color[][] board() {
+		return new GameConfiguration.Color[7][7];
 	}
 	
 	/*

@@ -3,7 +3,6 @@ package org.hv.reversi.game.impl;
 import java.util.Optional;
 
 import org.hv.reversi.game.api.Game;
-import org.hv.reversi.game.api.GameBoard;
 import org.hv.reversi.game.api.GameId;
 import org.hv.reversi.game.api.Pos;
 import org.hv.user.api.UserId;

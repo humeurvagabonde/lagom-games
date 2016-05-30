@@ -1,11 +1,14 @@
 package org.hv.reversi.game.impl;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 
 import javax.inject.Inject;
 
 import org.hv.reversi.game.api.Game;
 import org.hv.reversi.game.api.GameId;
+import org.hv.reversi.game.api.PlayDiscRequest;
 import org.hv.reversi.game.api.ReversiGameService;
 import org.hv.service.BaseGameService;
 
@@ -16,6 +19,10 @@ import com.lightbend.lagom.javadsl.persistence.PersistentEntityRegistry;
 
 import akka.NotUsed;
 import akka.stream.javadsl.Source;
+<<<<<<< Updated upstream
+import sample.chirper.chirp.api.Chirp;
+=======
+>>>>>>> Stashed changes
 
 public class ReversiGameServiceImpl extends BaseGameService implements ReversiGameService {
 
@@ -60,7 +67,7 @@ public class ReversiGameServiceImpl extends BaseGameService implements ReversiGa
     	});
 	}
 
-    private PersistentEntityRef<ReversiGameCommand> reversiEntityRef(String reversiGameId) {
+	private PersistentEntityRef<ReversiGameCommand> reversiEntityRef(String reversiGameId) {
         PersistentEntityRef<ReversiGameCommand> ref = persistentEntities.refFor(ReversiGameEntity.class, reversiGameId);
         return ref;
     }

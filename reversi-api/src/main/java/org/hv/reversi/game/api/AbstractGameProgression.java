@@ -7,7 +7,7 @@ import com.lightbend.lagom.javadsl.immutable.ImmutableStyle;
 
 @Value.Immutable
 @ImmutableStyle
-public interface AbstractGameProgression {
+interface AbstractGameProgression {
 
     UserId currentPlayer();
     UserId currentState();
