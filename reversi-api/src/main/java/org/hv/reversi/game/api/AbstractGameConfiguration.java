@@ -11,11 +11,6 @@ import com.lightbend.lagom.javadsl.immutable.ImmutableStyle;
 @ImmutableStyle
 interface AbstractGameConfiguration {
 
-    enum Color {
-        BLACK,
-        WHITE
-    }
-    
     UserId owner();
     int nbPlayerMin();
     int nbPlayerMax();

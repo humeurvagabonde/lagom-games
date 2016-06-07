@@ -1,8 +1,8 @@
 package org.hv.reversi.game.api;
 
 import static com.lightbend.lagom.javadsl.api.Service.named;
-import static com.lightbend.lagom.javadsl.api.Service.restCall;
 import static com.lightbend.lagom.javadsl.api.Service.pathCall;
+import static com.lightbend.lagom.javadsl.api.Service.restCall;
 
 import org.hv.auth.JwtServiceIdentificationStrategy;
 
@@ -27,7 +27,7 @@ public interface ReversiGameService extends Service {
      */
     ServiceCall<String, NotUsed, Game> getGame();
     
-    ServiceCall<String, Source<PlayDiscRequest, NotUsed>, Source<Game, NotUsed>> playDisc();
+    ServiceCall<String, Source<PlayDiscRequest, NotUsed>, Source<AbstractGame, NotUsed>> playDisc();
     
     @Override
     default Descriptor descriptor() {

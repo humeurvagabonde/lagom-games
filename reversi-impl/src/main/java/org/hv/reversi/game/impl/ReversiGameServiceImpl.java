@@ -2,12 +2,12 @@ package org.hv.reversi.game.impl;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 
-import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 
 import javax.inject.Inject;
 
+import org.hv.reversi.game.api.AbstractGame;
 import org.hv.reversi.game.api.Game;
 import org.hv.reversi.game.api.GameId;
 import org.hv.reversi.game.api.PlayDiscRequest;
@@ -55,22 +55,18 @@ public class ReversiGameServiceImpl extends BaseGameService implements ReversiGa
     }
     
     @Override
- 	public ServiceCall<String, Source<PlayDiscRequest, NotUsed>, Source<Game, NotUsed>> playDisc() {
+ 	public ServiceCall<String, Source<PlayDiscRequest, NotUsed>, Source<AbstractGame, NotUsed>> playDisc() {
  	  	return (id, request) -> {
  	  		UserId userId = UserId.of("1");
  	  		GameId gameId = GameId.of(id);
- 	  		Source<Game, NotUsed> gameStream = request.mapAsync(1, action -> applyPlayDiscRequest(userId, gameId, action));
+ 	  		Source<AbstractGame, NotUsed> gameStream = request.mapAsync(1, action -> applyPlayDiscRequest(userId, gameId, action));
    			return completedFuture(gameStream);
    		};
  	}
     
-    private CompletionStage<Game> applyPlayDiscRequest(UserId userId, GameId gameId, PlayDiscRequest action) {
-    	return reversiEntityRef(gameId.id()).ask(PlayDisc.of(userId, gameId, Pos.builder().x(0).y(0).build())).thenApply(reply -> {
-          if (reply.game().isPresent())
-            return reply.game().get();
-          else
-            throw new NotFound("reversi game " + gameId.id() + " not found");
-        });
+    private CompletionStage<AbstractGame> applyPlayDiscRequest(UserId userId, GameId gameId, PlayDiscRequest action) {
+    	reversiEntityRef(gameId.id()).ask(PlayDisc.of(userId, gameId, Pos.builder().x(0).y(0).build()));
+    	return null;
     }
 
     private PersistentEntityRef<ReversiGameCommand> reversiEntityRef(String reversiGameId) {
