@@ -9,7 +9,6 @@ import org.hv.reversi.game.api.Color;
 import org.hv.reversi.game.api.Game;
 import org.hv.reversi.game.api.GameBoard;
 import org.hv.reversi.game.api.Pos;
-import org.hv.reversi.game.impl.ReversiGameEvent.GameCreated;
 import org.pcollections.HashTreePBag;
 import org.pcollections.PCollection;
 import org.pcollections.TreePVector;
@@ -34,11 +33,11 @@ public class ReversiGameEntity extends PersistentEntity<ReversiGameCommand, Reve
 				ctx.invalidCommand("Reversi game " + entityId() + " is already created");
 				return ctx.done();
 			}
-			return ctx.thenPersist(new GameCreated(cmd.gameId()), (evt) -> ctx.reply(CreateGameReply.of(cmd.gameId())));
+			return ctx.thenPersist(GameCreated.of(cmd.gameId()), (evt) -> ctx.reply(CreateGameReply.of(cmd.gameId())));
 
 		});
 
-		b.setEventHandler(GameCreated.class, evt -> ReversiGameState.of(Optional.of(Game.builder().id(evt.gameId).build())));
+		b.setEventHandler(GameCreated.class, evt -> ReversiGameState.of(Optional.of(Game.builder().id(evt.gameId()).build())));
 
 		b.setCommandHandler(PlayDisc.class, (cmd, ctx) -> {
 		    List<ReversiGameEvent> events = new ArrayList<>();

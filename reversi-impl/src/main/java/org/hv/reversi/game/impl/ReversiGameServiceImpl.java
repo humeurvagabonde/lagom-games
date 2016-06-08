@@ -1,14 +1,13 @@
 package org.hv.reversi.game.impl;
 
-import static java.util.concurrent.CompletableFuture.completedFuture;
-
+import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.CompletionStage;
+import java.util.concurrent.CompletableFuture;
 
 import javax.inject.Inject;
 
-import org.hv.reversi.game.api.AbstractGame;
 import org.hv.reversi.game.api.Game;
+import org.hv.reversi.game.api.GameEvent;
 import org.hv.reversi.game.api.GameId;
 import org.hv.reversi.game.api.PlayDiscRequest;
 import org.hv.reversi.game.api.Pos;
@@ -22,16 +21,18 @@ import com.lightbend.lagom.javadsl.persistence.PersistentEntityRef;
 import com.lightbend.lagom.javadsl.persistence.PersistentEntityRegistry;
 
 import akka.NotUsed;
+import akka.japi.pf.PFBuilder;
 import akka.stream.javadsl.Source;
+import scala.PartialFunction;
 
 public class ReversiGameServiceImpl extends BaseGameService implements ReversiGameService {
 
-    private final PersistentEntityRegistry persistentEntities;
+    private final PersistentEntityRegistry persistentEntityRegistry;
     
     @Inject
-    public ReversiGameServiceImpl(PersistentEntityRegistry persistentEntities) {
-      this.persistentEntities = persistentEntities;
-      this.persistentEntities.register(ReversiGameEntity.class);
+    public ReversiGameServiceImpl(PersistentEntityRegistry persistentEntityRegistry) {
+      this.persistentEntityRegistry = persistentEntityRegistry;
+      this.persistentEntityRegistry.register(ReversiGameEntity.class);
     }
 
     @Override
@@ -55,22 +56,28 @@ public class ReversiGameServiceImpl extends BaseGameService implements ReversiGa
     }
     
     @Override
- 	public ServiceCall<String, Source<PlayDiscRequest, NotUsed>, Source<AbstractGame, NotUsed>> playDisc() {
+ 	public ServiceCall<String, Source<PlayDiscRequest, ?>, Source<GameEvent, ?>> playDisc() {
  	  	return (id, request) -> {
  	  		UserId userId = UserId.of("1");
  	  		GameId gameId = GameId.of(id);
- 	  		Source<AbstractGame, NotUsed> gameStream = request.mapAsync(1, action -> applyPlayDiscRequest(userId, gameId, action));
-   			return completedFuture(gameStream);
+ 	  		reversiEntityRef(gameId.id()).ask(PlayDisc.of(userId, gameId, Pos.builder().x(0).y(0).build()));
+
+            Source<GameEvent, ?> stream = persistentEntityRegistry
+                    .eventStream(ReversiGameEventTag.INSTANCE, Optional.empty())
+                    .map(pair -> pair.first()).collect(collectFunction());
+            return CompletableFuture.completedFuture(stream);
    		};
  	}
     
-    private CompletionStage<AbstractGame> applyPlayDiscRequest(UserId userId, GameId gameId, PlayDiscRequest action) {
-    	reversiEntityRef(gameId.id()).ask(PlayDisc.of(userId, gameId, Pos.builder().x(0).y(0).build()));
-    	return null;
+    private PartialFunction<ReversiGameEvent, GameEvent> collectFunction() {
+            return new PFBuilder<ReversiGameEvent, GameEvent>()
+                .match(ReversiGameEvent.class, evt ->
+                    GameEvent.builder().build())
+                .build();
     }
 
     private PersistentEntityRef<ReversiGameCommand> reversiEntityRef(String reversiGameId) {
-        PersistentEntityRef<ReversiGameCommand> ref = persistentEntities.refFor(ReversiGameEntity.class, reversiGameId);
+        PersistentEntityRef<ReversiGameCommand> ref = persistentEntityRegistry.refFor(ReversiGameEntity.class, reversiGameId);
         return ref;
     }
 

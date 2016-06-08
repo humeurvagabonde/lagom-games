@@ -27,7 +27,7 @@ public interface ReversiGameService extends Service {
      */
     ServiceCall<String, NotUsed, Game> getGame();
     
-    ServiceCall<String, Source<PlayDiscRequest, NotUsed>, Source<AbstractGame, NotUsed>> playDisc();
+    ServiceCall<String, Source<PlayDiscRequest, ?>, Source<GameEvent, ?>> playDisc();
     
     @Override
     default Descriptor descriptor() {
