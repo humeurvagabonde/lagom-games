@@ -36,16 +36,16 @@ public class ReversiGameServiceImpl extends BaseGameService implements ReversiGa
     }
 
     @Override
-    public ServiceCall<NotUsed, NotUsed, GameId> createGame() {
-        return authenticated(userId -> (id, request) -> {
+    public ServiceCall<NotUsed, GameId> createGame() {
+        return authenticated(userId -> request -> {
         	GameId gameId = GameId.of(UUID.randomUUID().toString());
             return reversiEntityRef(gameId.toString()).ask(CreateGame.of(gameId)).thenApply(reply -> reply.gameId());
         });
     }
     
     @Override
-    public ServiceCall<String, NotUsed, Game> getGame() {
-      return (id, request) -> {
+    public ServiceCall<NotUsed, Game> getGame(String id) {
+      return request -> {
         return reversiEntityRef(id).ask(GetGame.of()).thenApply(reply -> {
           if (reply.game().isPresent())
             return reply.game().get();
@@ -56,8 +56,8 @@ public class ReversiGameServiceImpl extends BaseGameService implements ReversiGa
     }
     
     @Override
- 	public ServiceCall<String, Source<PlayDiscRequest, ?>, Source<GameEvent, ?>> playDisc() {
- 	  	return (id, request) -> {
+ 	public ServiceCall<Source<PlayDiscRequest, ?>, Source<GameEvent, ?>> playDisc(String id) {
+ 	  	return request -> {
  	  		UserId userId = UserId.of("1");
  	  		GameId gameId = GameId.of(id);
  	  		reversiEntityRef(gameId.id()).ask(PlayDisc.of(userId, gameId, Pos.builder().x(0).y(0).build()));

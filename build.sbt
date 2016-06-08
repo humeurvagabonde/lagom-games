@@ -54,4 +54,4 @@ import scala.concurrent.duration._ // Mind that the import is needed.
 lagomCassandraCleanOnStart in ThisBuild := true
 lagomCassandraMaxBootWaitingTime in ThisBuild := 60.seconds
 
-fork in run := true
+//fork in run := true

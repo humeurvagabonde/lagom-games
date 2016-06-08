@@ -19,22 +19,22 @@ public interface ReversiGameService extends Service {
     /**
      * Service call for creating a game of Reversi.
      */
-    ServiceCall<NotUsed, NotUsed, GameId> createGame();
+    ServiceCall<NotUsed, GameId> createGame();
     
     /**
      * Service call for getting a game.
      * The ID of this service call is the game Id, and the response message is the Game object.
      */
-    ServiceCall<String, NotUsed, Game> getGame();
+    ServiceCall<NotUsed, Game> getGame(String id);
     
-    ServiceCall<String, Source<PlayDiscRequest, ?>, Source<GameEvent, ?>> playDisc();
+    ServiceCall<Source<PlayDiscRequest, ?>, Source<GameEvent, ?>> playDisc(String id);
     
     @Override
     default Descriptor descriptor() {
         return named("reversiGameService").with(
-            restCall(Method.POST, "/api/reversi/games/", createGame()),
-            restCall(Method.GET,  "/api/reversi/games/:id", getGame()),
-            pathCall("/api/reversi/games/:id/play-disc", playDisc())
+            restCall(Method.POST, "/api/reversi/games/", this::createGame),
+            restCall(Method.GET,  "/api/reversi/games/:id", this::getGame),
+            pathCall("/api/reversi/games/:id/play-disc", this::playDisc)
         )
 		.withAutoAcl(true)
 		.withServiceIdentificationStrategy(new JwtServiceIdentificationStrategy());

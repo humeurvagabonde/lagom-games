@@ -10,8 +10,8 @@ import com.lightbend.lagom.javadsl.server.ServerServiceCall;
 
 public class BaseGameService {
 
-	public <Id, Request, Response> ServerServiceCall<Id, Request, Response> authenticated(
-			Function<UserId, ServerServiceCall<Id, Request, Response>> serviceCall) {
+	public <Request, Response> ServerServiceCall<Request, Response> authenticated(
+			Function<UserId, ServerServiceCall<Request, Response>> serviceCall) {
 		// TODO le rendre asynchrone composeAsync et appeler UserServiceImpl
 		return HeaderServiceCall.compose(requestHeader -> {
 			String userId = requestHeader.principal().orElseGet(() -> {
